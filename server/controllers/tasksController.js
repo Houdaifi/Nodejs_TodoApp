@@ -2,7 +2,7 @@ const Task = require('../models/Task');
 
 const getAllTasks = async (req, res) => {
     try {
-        const tasks = await Task.find();
+        const tasks = await Task.find().sort({createdAt:-1}) ;
         res.send(tasks);
     } catch (error) {
         res.send(error.message);
@@ -12,7 +12,7 @@ const getAllTasks = async (req, res) => {
 const createTask = async (req, res) => {
     try {
         const task = await Task.create(req.body);
-        console.log(req.body);
+        res.send(task);
     } catch (error) {
         res.send(error.message);
     }
@@ -27,12 +27,22 @@ const getTask = async (req, res) => {
     }
 }
 
-const updateTask = (req, res) => {
-    res.send("UPDATED TASK");
+const updateTask = async (req, res) => {
+    try {
+        const task = await Task.findByIdAndUpdate({_id: req.body._id}, {$set: req.body});
+        res.send(task);
+    } catch (error) {
+        res.send(error.message);
+    }
 }
 
-const deleteTask = (req, res) => {
-    res.send("DELETED TASK");
+const deleteTask = async (req, res) => {
+    try {
+        const task = await Task.findByIdAndDelete({_id: req.body._id});
+        res.send(task);
+    } catch (error) {
+        res.send(error.message)
+    }
 }
 
 module.exports = {
